@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مركز حذيفة بن اليمان</title>
+<meta name="theme-color" content="#1f6f50">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4ec;--card:#fff;--txt:#1d2b24;--sub:#6b7a72;--pri:#1f6f50;--pri2:#e3f1ea;--bad:#c0392b;--bad2:#fbe9e6;--warn:#b9770e;--line:#e2ded0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#101a15;--card:#18261f;--txt:#e8efe9;--sub:#94a79b;--pri:#3fae82;--pri2:#1f3a2d;--bad:#ef7b6f;--bad2:#3a1f1c;--warn:#e0a84a;--line:#2a3b32}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#101a15;--card:#18261f;--txt:#e8efe9;--sub:#94a79b;--pri:#3fae82;--pri2:#1f3a2d;--bad:#ef7b6f;--bad2:#3a1f1c;--warn:#e0a84a;--line:#2a3b32}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:Cairo,system-ui,Tahoma,sans-serif;padding-bottom:84px}
+header{background:var(--pri);color:#fff;padding:14px 16px;font-weight:700;font-size:18px}
+header small{display:block;font-weight:400;font-size:12px;opacity:.9}
+main{padding:12px;max-width:640px;margin:auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+h2{font-size:15px;margin:0 0 8px;color:var(--pri)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{background:var(--pri2);border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-size:24px}.stat span{font-size:12px;color:var(--sub)}
+.stat.bad{background:var(--bad2)}
+input,select,textarea,button{font-family:inherit;font-size:15px}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--txt);margin-bottom:8px}
+button,.btn{border:0;border-radius:10px;padding:9px 12px;background:var(--pri);color:#fff;cursor:pointer;text-decoration:none;display:inline-block;font-size:14px}
+.g{background:var(--pri2)!important;color:var(--pri)!important}
+.r{background:var(--bad2)!important;color:var(--bad)!important}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.sub{color:var(--sub);font-size:13px}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.seg button{background:var(--bg);color:var(--txt);border:1px solid var(--line);padding:7px 10px}
+.seg .on{background:var(--pri);color:#fff}.seg .on.a{background:var(--bad)}.seg .on.e{background:var(--warn)}
+.cur{background:var(--pri2);border-radius:10px;padding:8px 10px;margin-top:6px}
+.empty{text-align:center;color:var(--sub);padding:18px}
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}
+nav a{flex:1;text-align:center;text-decoration:none;color:var(--sub);font-size:12px}
+nav a span{display:block;font-size:20px}nav a.on{color:var(--pri);font-weight:700}
+section[hidden]{display:none}
+#toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:8px 14px;border-radius:10px;font-size:14px;z-index:9}
+#toast[hidden]{display:none}
+.lg{position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;flex-direction:column;justify-content:center;padding:24px;max-width:480px;margin:auto}.lg[hidden]{display:none}.lg h1{color:var(--pri);font-size:22px;text-align:center}
+</style>
+</head>
+<body>
+<header class="row"><span>🕌 مركز حذيفة بن اليمان<small>تحت إشراف الشيخ فرج</small></span><button class="g" id="lo">خروج</button></header>
+<div class="lg" id="lg"><h1>🕌 مركز حذيفة بن اليمان</h1><input id="lu" placeholder="اسم المستخدم" autocomplete="username" autocapitalize="none"><input id="lp" type="password" placeholder="كلمة المرور" autocomplete="current-password"><button id="li">دخول</button><div id="le" class="sub" style="color:var(--bad);margin-top:8px"></div></div>
+<main>
+<section id="v-home"><div id="hm"></div></section>
+<section id="v-att">
+ <div class="card"><input type="date" id="day"><div class="row"><span id="as" class="sub"></span><button class="g" id="allP">تحضير الكل حاضر</button></div></div>
+ <div id="atl"></div>
+</section>
+<section id="v-rec">
+ <div class="card"><h2>التسميع والتقدير</h2><input type="date" id="rday"><div class="sub">سجّل التقدير، وعند إتمام السورة اضغط «أتمّ السورة» لينتقل الطالب تلقائياً إلى السورة التالية.</div></div>
+ <div id="rcl"></div>
+</section>
+<section id="v-stu">
+ <div class="card"><h2>إضافة طالب</h2>
+  <input id="sn" placeholder="اسم الطالب">
+  <select id="sl"></select>
+  <select id="ss"></select>
+  <select id="sd"><option value="1">ترتيب تصاعدي (البروج ← الطارق)</option><option value="-1">ترتيب عكسي (من الناس إلى أعلى)</option></select>
+  <input id="pn" placeholder="اسم ولي الأمر"><input id="pp" type="tel" placeholder="رقم ولي الأمر (واتساب)">
+  <button id="addS">إضافة</button>
+  <div class="sub" style="margin:12px 0 6px">أو مجموعة أسماء (اسم في كل سطر، بنفس المستوى والسورة فوق):</div>
+  <textarea id="bulk" rows="3" placeholder="محمد أحمد&#10;عمر علي"></textarea>
+  <button class="g" id="addB">إضافة الأسماء</button></div>
+ <div class="card"><h2>تقرير الشهر لأولياء الأمور</h2><input type="month" id="rmo"></div>
+ <div id="stl"></div>
+</section>
+<section id="v-exm"><div class="card"><h2>تحديد اختبار شهري</h2><input type="date" id="ed"><input id="et" placeholder="عنوان الاختبار (مثال: اختبار شهر ربيع الأول)"><select id="el"></select><button id="addE">إضافة</button></div><div id="exl"></div></section>
+</main>
+<nav>
+ <a href="#home" id="n-home"><span>🏠</span>المتابعة</a>
+ <a href="#att" id="n-att"><span>✅</span>الحضور</a>
+ <a href="#rec" id="n-rec"><span>📖</span>التسميع</a>
+ <a href="#stu" id="n-stu"><span>👥</span>الطلاب</a>
+ <a href="#exm" id="n-exm"><span>📅</span>الاختبارات</a>
+</nav>
+<div id="toast" hidden></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+var SU='الفاتحة,البقرة,آل عمران,النساء,المائدة,الأنعام,الأعراف,الأنفال,التوبة,يونس,هود,يوسف,الرعد,إبراهيم,الحجر,النحل,الإسراء,الكهف,مريم,طه,الأنبياء,الحج,المؤمنون,النور,الفرقان,الشعراء,النمل,القصص,العنكبوت,الروم,لقمان,السجدة,الأحزاب,سبأ,فاطر,يس,الصافات,ص,الزمر,غافر,فصلت,الشورى,الزخرف,الدخان,الجاثية,الأحقاف,محمد,الفتح,الحجرات,ق,الذاريات,الطور,النجم,القمر,الرحمن,الواقعة,الحديد,المجادلة,الحشر,الممتحنة,الصف,الجمعة,المنافقون,التغابن,الطلاق,التحريم,الملك,القلم,الحاقة,المعارج,نوح,الجن,المزمل,المدثر,القيامة,الإنسان,المرسلات,النبأ,النازعات,عبس,التكوير,الانفطار,المطففين,الانشقاق,البروج,الطارق,الأعلى,الغاشية,الفجر,البلد,الشمس,الليل,الضحى,الشرح,التين,العلق,القدر,البينة,الزلزلة,العاديات,القارعة,التكاثر,العصر,الهمزة,الفيل,قريش,الماعون,الكوثر,الكافرون,النصر,المسد,الإخلاص,الفلق,الناس'.split(',');
+var LV=['تمهيدي','المستوى الأول','المستوى الثاني','المستوى الثالث','متقدم'],GR=['ممتاز','جيد جداً','جيد','مقبول','ضعيف'];
+var D={st:[],att:{},gr:{},ex:[]};
+function $(i){return document.getElementById(i)}
+function esc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function ymd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function fd(s){return new Date(s+'T00:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'})}
+function toast(t){var e=$('toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(function(){e.hidden=true},2800)}
+function wa(p,t){var d=(p||'').replace(/\D/g,'');if(d.indexOf('00')===0)d=d.slice(2);else if(d[0]==='0')d='20'+d.slice(1);return'https://wa.me/'+d+'?text='+encodeURIComponent(t)}
+function G(id){return D.st.filter(function(s){return s.id===id})[0]}
+function sorted(){return D.st.slice().sort(function(a,b){return a.name.localeCompare(b.name,'ar')})}
+function sn(i){return i?SU[i-1]:'ختم المنهج'}
+function nx(s){var n=s.s+(s.d||1);return s.s&&n>=1&&n<=114?n:0}
+function lab(a){return GR[a>=3.5?0:a>=2.5?1:a>=1.5?2:a>=.5?3:4]}
+function mst(id,mo){var t=0,n=0;for(var k in D.gr){var g=D.gr[k];if(k.slice(0,7)===mo&&k.slice(11)===id&&g.g){t+=4-GR.indexOf(g.g);n++}}return n?lab(t/n):'—'}
+function ac(id,from,mo){var c={p:0,a:0,e:0};for(var k in D.att){if(k.slice(11)===id&&(mo?k.slice(0,7)===mo:k.slice(0,10)>=from))c[D.att[k]]++}return c}
+function lvo(v){return LV.map(function(x){return'<option'+(x===v?' selected':'')+'>'+x+'</option>'}).join('')}
+function suo(v){var o='';for(var i=1;i<=114;i++)o+='<option value="'+i+'"'+(i===v?' selected':'')+'>'+i+' - '+SU[i-1]+'</option>';return o+'<option value="0"'+(v===0?' selected':'')+'>ختم المنهج</option>'}
+function dro(v){return'<option value="1"'+(v!==-1?' selected':'')+'>ترتيب تصاعدي (البروج ← الطارق)</option><option value="-1"'+(v===-1?' selected':'')+'>ترتيب عكسي (من الناس إلى أعلى)</option>'}
+function rep(s,mo){var c=ac(s.id,0,mo),dn=(s.h||[]).filter(function(x){return x.d.slice(0,7)===mo}).map(function(x){return sn(x.n)}),
+ mn=new Date(mo+'-01T00:00').toLocaleDateString('ar-EG',{month:'long',year:'numeric'});
+ return'السلام عليكم ورحمة الله وبركاته\nولي أمر الطالب: '+s.name+'\n\nتقرير شهر '+mn+' - مركز حذيفة بن اليمان\n\n• المستوى: '+s.l+'\n• أيام الحضور: '+c.p+'\n• أيام الغياب: '+c.a+(c.e?' (بعذر: '+c.e+')':'')+'\n• التقدير العام: '+mst(s.id,mo)+'\n'+(dn.length?'• أتمّ حفظ: '+dn.join('، ')+'\n':'')+'• يحفظ الآن: '+sn(s.s)+'\n\nجزاكم الله خيراً، تحت إشراف الشيخ فرج'}
+
+function rH(){
+ var t=ymd(new Date()),f=ymd(new Date(Date.now()-30*864e5)),c={p:0,a:0,e:0};
+ D.st.forEach(function(s){var v=D.att[t+'_'+s.id];if(v)c[v]++});
+ function st(n,l,k){return'<div class="stat '+(k||'')+'"><b>'+n+'</b><span>'+l+'</span></div>'}
+ var w=D.st.map(function(s){return{s:s,a:ac(s.id,f).a}}).filter(function(x){return x.a>=3});
+ $('hm').innerHTML='<div class="card"><h2>حضور اليوم · '+fd(t)+'</h2><div class="grid">'+st(c.p,'حاضر')+st(c.a,'غائب','bad')+st(c.e,'بعذر')+st(Math.max(0,D.st.length-c.p-c.a-c.e),'لم يُسجَّل')+'</div></div>'+
+ '<div class="card"><h2>أين وصل الطلاب؟</h2>'+(D.st.length?sorted().map(function(s){return'<div class="row" style="padding:5px 0;border-top:1px solid var(--line)"><b>'+esc(s.name)+'</b><span class="sub">'+esc(s.l)+' · '+sn(s.s)+'</span></div>'}).join(''):'<div class="empty">أضف الطلاب من تبويب «الطلاب»</div>')+'</div>'+
+ '<div class="card"><h2>⚠️ يحتاجون متابعة (غياب 3 أيام فأكثر في 30 يوم)</h2>'+(w.length?w.map(function(x){return'<div class="row" style="padding:4px 0"><span>'+esc(x.s.name)+' · غاب '+x.a+'</span>'+(x.s.ph?'<a class="btn g" target="_blank" rel="noopener" href="'+wa(x.s.ph,'السلام عليكم، ولي أمر الطالب '+x.s.name+'، نلاحظ تكرار غياب ابنكم عن المركز، نرجو التواصل معنا.')+'">واتساب</a>':'')+'</div>'}).join(''):'<div class="sub">لا يوجد حالياً 👍</div>')+'</div>';
+}
+function rA(){
+ var d=$('day').value,c={p:0,a:0,e:0};
+ $('atl').innerHTML=sorted().map(function(s){var cur=D.att[d+'_'+s.id];if(cur)c[cur]++;
+  function b(k,x){return'<button class="'+(cur===k?'on ':'')+k+'" data-a="at" data-k="'+k+'" data-i="'+s.id+'">'+x+'</button>'}
+  return'<div class="card"><div class="row"><div><b>'+esc(s.name)+'</b><div class="sub">'+esc(s.l)+'</div></div><div class="seg">'+b('p','حاضر')+b('a','غائب')+b('e','بعذر')+'</div></div>'+(cur==='a'&&s.ph?'<a class="btn g" target="_blank" rel="noopener" href="'+wa(s.ph,'السلام عليكم ورحمة الله، ولي أمر الطالب '+s.name+'، نفيدكم بأن ابنكم غاب اليوم عن مركز تحفيظ القرآن الكريم. نرجو الاطمئنان عليه.')+'">📲 إبلاغ ولي الأمر</a>':'')+'</div>'}).join('')||'<div class="empty">أضف الطلاب أولاً من تبويب «الطلاب»</div>';
+ $('as').textContent='حاضر '+c.p+' · غائب '+c.a+' · بعذر '+c.e;
+}
+function rR(){
+ var d=$('rday').value;
+ $('rcl').innerHTML=sorted().map(function(s){var g=D.gr[d+'_'+s.id]||{},n=nx(s),ab=D.att[d+'_'+s.id];
+  return'<div class="card"'+(ab==='a'||ab==='e'?' style="opacity:.65"':'')+'><b>'+esc(s.name)+'</b><div class="sub">'+esc(s.l)+(ab==='a'||ab==='e'?' · غائب':'')+' · تقدير الشهر: '+mst(s.id,d.slice(0,7))+'</div>'+
+  '<div class="cur">📖 يحفظ الآن: <b>'+sn(s.s)+'</b>'+(n?'<div class="sub">السورة التالية: '+sn(n)+'</div>':'')+'</div>'+
+  '<div class="seg">'+GR.map(function(x){return'<button class="'+(g.g===x?'on':'')+'" data-a="gd" data-k="'+x+'" data-i="'+s.id+'">'+x+'</button>'}).join('')+'</div>'+
+  '<input data-a="nt" data-i="'+s.id+'" value="'+esc(g.n||'')+'" placeholder="ملاحظة (مثال: الآيات 1-10)">'+
+  '<div class="row">'+(s.s?'<button data-a="dn" data-i="'+s.id+'">✅ أتمّ السورة</button>':'<span>🎉 ختم المنهج</span>')+((s.h||[]).length?'<button class="g" data-a="un" data-i="'+s.id+'">↩ تراجع</button>':'')+'</div></div>'}).join('')||'<div class="empty">أضف الطلاب أولاً من تبويب «الطلاب»</div>';
+}
+function rS(){
+ var mo=$('rmo').value||ymd(new Date()).slice(0,7);
+ $('stl').innerHTML=sorted().map(function(s){
+  return'<div class="card"><div class="row"><b>'+esc(s.name)+'</b><span class="sub">تقدير الشهر: '+mst(s.id,mo)+'</span></div>'+
+  '<select data-a="lv" data-i="'+s.id+'">'+lvo(s.l)+'</select><select data-a="su" data-i="'+s.id+'">'+suo(s.s)+'</select><select data-a="dr" data-i="'+s.id+'">'+dro(s.d)+'</select>'+
+  '<div class="sub">ولي الأمر: '+esc(s.pn||'—')+(s.ph?' · '+esc(s.ph):'')+' · أتمّ '+(s.h||[]).length+' سورة</div>'+
+  '<div class="row" style="margin-top:8px;justify-content:flex-start">'+(s.ph?'<a class="btn g" href="tel:'+esc(s.ph)+'">📞 اتصال</a><a class="btn" target="_blank" rel="noopener" href="'+wa(s.ph,rep(s,mo))+'">📋 تقرير</a>':'<button class="g" data-a="cr" data-i="'+s.id+'">📋 نسخ التقرير</button>')+'<button class="r" data-a="del" data-i="'+s.id+'">حذف</button></div></div>'}).join('')||'<div class="empty">لا يوجد طلاب بعد</div>';
+}
+function R(){rH();rX();rA();var a=document.activeElement;if(!(a&&a.dataset&&a.dataset.a==='nt'))rR();rS()}
+
+document.addEventListener('click',function(e){
+ var b=e.target.closest('[data-a]');if(!b||b.tagName==='INPUT'||b.tagName==='SELECT')return;
+ var a=b.dataset.a,s=G(b.dataset.i),k;
+ if(a==='at'){k=$('day').value+'_'+s.id;if(D.att[k]===b.dataset.k)delete D.att[k];else D.att[k]=b.dataset.k}
+ else if(a==='gd'){k=$('rday').value+'_'+s.id;var g=D.gr[k]||{};g.g=g.g===b.dataset.k?'':b.dataset.k;D.gr[k]=g}
+ else if(a==='dn'){var n=nx(s);s.h=s.h||[];s.h.push({n:s.s,d:$('rday').value});s.s=n;toast(n?'انتقل إلى سورة '+sn(n):'ما شاء الله، ختم المنهج 🎉')}
+ else if(a==='un'){var l=(s.h||[]).pop();if(l)s.s=l.n}
+ else if(a==='xd'){D.ex=D.ex.filter(function(x){return x.id!==b.dataset.i})}
+ else if(a==='del'){if(!confirm('حذف الطالب '+s.name+'؟'))return;D.st=D.st.filter(function(x){return x!==s})}
+ else if(a==='cr'){var t=rep(s,$('rmo').value||ymd(new Date()).slice(0,7));try{navigator.clipboard.writeText(t).then(function(){toast('تم نسخ التقرير')})}catch(x){toast('تعذّر النسخ')}return}
+ save();R();
+});
+document.addEventListener('change',function(e){
+ var t=e.target,a=t.dataset.a,s=G(t.dataset.i);if(!a||!s)return;
+ if(a==='nt'){var k=$('rday').value+'_'+s.id,g=D.gr[k]||{};g.n=t.value.trim();D.gr[k]=g;save();return}
+ if(a==='lv')s.l=t.value;if(a==='su')s.s=+t.value;if(a==='dr')s.d=+t.value;
+ save();R();
+});
+function add(names,one){names.forEach(function(n){D.st.push({id:'s'+Date.now()+Math.random().toString(36).slice(2,6),name:n,l:$('sl').value,s:+$('ss').value,d:+$('sd').value,pn:one?$('pn').value.trim():'',ph:one?$('pp').value.trim():'',h:[]})});save();R()}
+$('addS').onclick=function(){var n=$('sn').value.trim();if(!n){toast('اكتب اسم الطالب');return}add([n],1);$('sn').value=$('pn').value=$('pp').value='';toast('تمت الإضافة')};
+$('addB').onclick=function(){var ns=$('bulk').value.split('\n').map(function(x){return x.trim()}).filter(Boolean);if(!ns.length){toast('اكتب الأسماء أولاً');return}add(ns);$('bulk').value='';toast('تمت إضافة '+ns.length+' طالب')};
+$('allP').onclick=function(){var d=$('day').value;D.st.forEach(function(s){if(!D.att[d+'_'+s.id])D.att[d+'_'+s.id]='p'});save();R()};
+$('day').onchange=rA;$('rday').onchange=rR;$('rmo').onchange=rS;
+$('day').value=$('rday').value=ymd(new Date());$('rmo').value=ymd(new Date()).slice(0,7);
+$('sl').innerHTML=lvo();$('ss').innerHTML=suo(78);
+function show(){var n=location.hash.slice(1),T=['home','att','rec','stu','exm'],t=T.indexOf(n)>-1?n:'home';T.forEach(function(x){$('v-'+x).hidden=x!==t;$('n-'+x).className=x===t?'on':''})}
+
+function rX(){var t=ymd(new Date()),u=D.ex.filter(function(e){return e.d>=t}).sort(function(a,b){return a.d<b.d?-1:1}).slice(0,4);
+ $('hm').innerHTML+='<div class="card"><h2>📅 الاختبارات القادمة</h2>'+(u.length?u.map(function(e){return'<div style="padding:4px 0"><b>'+esc(e.t||'اختبار شهري')+'</b><div class="sub">'+fd(e.d)+' · '+esc(e.l||'كل المستويات')+'</div></div>'}).join(''):'<div class="sub">لا توجد اختبارات محددة</div>')+'</div>';rE()}
+function rE(){var t=ymd(new Date());$('exl').innerHTML=D.ex.slice().sort(function(a,b){return a.d<b.d?1:-1}).map(function(e){return'<div class="card"'+(e.d<t?' style="opacity:.6"':'')+'><div class="row"><div><b>'+esc(e.t||'اختبار شهري')+'</b><div class="sub">'+fd(e.d)+' · '+esc(e.l||'كل المستويات')+'</div></div><button class="r" data-a="xd" data-i="'+e.id+'">حذف</button></div></div>'}).join('')||'<div class="empty">لا توجد اختبارات</div>'}
+$('el').innerHTML='<option value="">كل المستويات</option>'+lvo();
+$('addE').onclick=function(){if(!$('ed').value){toast('اختر التاريخ');return}D.ex.push({id:'e'+Date.now(),d:$('ed').value,t:$('et').value.trim(),l:$('el').value});$('et').value='';save();R();toast('تمت الإضافة')};
+
+firebase.initializeApp({apiKey:"AIzaSyCSKolz-EyLB_stw51gwqhjP6iQizbfjWQ",authDomain:"hozifa-2b8ab.firebaseapp.com",projectId:"hozifa-2b8ab",storageBucket:"hozifa-2b8ab.firebasestorage.app",messagingSenderId:"1015605148858",appId:"1:1015605148858:web:d93f27bcd8d9291a449683"});
+var fs=firebase.firestore(),L={},ready=false;
+try{fs.enablePersistence({synchronizeTabs:true}).catch(function(){})}catch(e){}
+function js(o){return JSON.stringify(o,function(k,v){return v&&typeof v==='object'&&!Array.isArray(v)?Object.keys(v).sort().reduce(function(r,x){r[x]=v[x];return r},{}):v})}
+function flat(){var m={},k;D.st.forEach(function(s){m['st/'+s.id]=s});D.ex.forEach(function(x){m['ex/'+x.id]=x});for(k in D.att)m['att/'+k]={v:D.att[k]};for(k in D.gr)m['gr/'+k]=D.gr[k];return m}
+function save(){if(!ready)return;var m=flat(),b=fs.batch(),n=0,k,j;
+ for(k in m){j=js(m[k]);if(L[k]!==j){b.set(fs.doc(k),m[k]);L[k]=j;n++}}
+ for(k in L)if(!(k in m)){b.delete(fs.doc(k));delete L[k];n++}
+ if(n)b.commit().catch(function(){toast('تعذّر الحفظ، تحقق من الاتصال')})}
+function sub(c,f){fs.collection(c).onSnapshot(function(q){var o=[],seen={},k;
+ q.forEach(function(d){k=c+'/'+d.id;var v=d.data();L[k]=js(v);seen[k]=1;o.push({id:d.id,v:v})});
+ for(k in L)if(k.indexOf(c+'/')===0&&!seen[k])delete L[k];
+ f(o);R()},function(){toast('تعذّر تحميل البيانات، تحقق من الاتصال')})}
+firebase.auth().onAuthStateChanged(function(u){$('lg').hidden=!!u;if(u&&!ready){ready=true;
+ sub('st',function(o){D.st=o.map(function(x){return x.v})});
+ sub('ex',function(o){D.ex=o.map(function(x){return x.v})});
+ sub('att',function(o){D.att={};o.forEach(function(x){D.att[x.id]=x.v.v})});
+ sub('gr',function(o){D.gr={};o.forEach(function(x){D.gr[x.id]=x.v})})}});
+$('li').onclick=function(){var u=$('lu').value.trim();if(u.indexOf('@')<0)u+='@hozifa.local';$('le').textContent='';
+ firebase.auth().signInWithEmailAndPassword(u,$('lp').value).catch(function(){$('le').textContent='اسم المستخدم أو كلمة المرور غير صحيحة'})};
+$('lo').onclick=function(){firebase.auth().signOut().then(function(){location.reload()})};
+window.addEventListener('hashchange',show);show();R();
+</script>
+</body>
+</htm
