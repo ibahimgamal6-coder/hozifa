@@ -197,7 +197,8 @@ firebase.auth().onAuthStateChanged(function(u){$('lg').hidden=!!u;if(u&&!ready){
 $('li').onclick=function(){var u=$('lu').value.trim();if(u.indexOf('@')<0)u+='@hozifa.local';$('le').textContent='';
  firebase.auth().signInWithEmailAndPassword(u,$('lp').value).catch(function(){$('le').textContent='اسم المستخدم أو كلمة المرور غير صحيحة'})};
 $('lo').onclick=function(){firebase.auth().signOut().then(function(){location.reload()})};
-window.addEventListener('hashchange',show);show();R();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});
+ window.addEventListener('hashchange',show);show();R();
 </script>
 </body>
 </htm
