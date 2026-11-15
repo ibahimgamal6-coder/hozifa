@@ -1,0 +1,20 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>أيقونة التطبيق</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
+<style>body{margin:0;padding:20px;text-align:center;font-family:Cairo,system-ui,Tahoma,sans-serif;background:#f6f4ec;color:#1d2b24}
+#i{width:min(80vw,320px);height:auto;border-radius:22%;box-shadow:0 4px 18px rgba(0,0,0,.25)}
+a{display:inline-block;margin-top:16px;background:#1f6f50;color:#fff;padding:12px 28px;border-radius:12px;text-decoration:none;font-size:18px}p{line-height:1.9}</style></head>
+<body><h2>أيقونة مركز حذيفة</h2><canvas id="c" width="512" height="512" style="display:none"></canvas><img id="i" alt="الأيقونة"><br><a id="d" download="icon-512.png" href="#">💾 تحميل الأيقونة</a><p id="m">جاري الرسم...</p>
+<script>
+function draw(){var c=document.getElementById('c'),x=c.getContext('2d');
+var g=x.createRadialGradient(256,230,20,256,256,360);g.addColorStop(0,'#22a396');g.addColorStop(1,'#0f6b5c');x.fillStyle=g;x.fillRect(0,0,512,512);
+x.lineWidth=5;x.strokeStyle='#e0b84a';x.beginPath();x.arc(256,256,203,0,7);x.stroke();x.lineWidth=2;x.strokeStyle='#f1d98a';x.beginPath();x.arc(256,256,192,0,7);x.stroke();
+var o=document.createElement('canvas');o.width=o.height=512;var y=o.getContext('2d');y.fillStyle='#fff';y.beginPath();y.arc(256,262,165,0,7);y.fill();y.globalCompositeOperation='destination-out';y.beginPath();y.arc(256,205,125,0,7);y.fill();x.drawImage(o,0,0);
+function arch(i,col){x.fillStyle=col;x.beginPath();x.moveTo(206+i,300);x.lineTo(206+i,190);x.bezierCurveTo(206+i,150+i,240,130+i,256,118+i*1.4);x.bezierCurveTo(272,130+i,306-i,150+i,306-i,190);x.lineTo(306-i,300);x.closePath();x.fill()}
+var a=x.createLinearGradient(0,118,0,300);a.addColorStop(0,'#b5e07a');a.addColorStop(1,'#3f9142');arch(0,a);arch(10,'#1d6b46');
+x.fillStyle='#fff';[[1],[-1]].forEach(function(s){s=s[0];x.beginPath();x.moveTo(256,222);x.lineTo(256,254);x.lineTo(256+s*32,247);x.lineTo(256+s*32,216);x.closePath();x.fill()});
+x.strokeStyle='#1d6b46';x.lineWidth=2;x.beginPath();x.moveTo(256,222);x.lineTo(256,254);x.stroke();
+x.fillStyle='#e0b84a';x.beginPath();for(var i=0;i<16;i++){var r=i%2?5:12,t=i*Math.PI/8;x.lineTo(256+r*Math.sin(t),178-r*Math.cos(t))}x.closePath();x.fill();
+x.fillStyle='#14604a';x.font='700 36px Cairo,Tahoma,sans-serif';x.textAlign='center';x.direction='rtl';x.fillText('حذيفة بن اليمان',256,392);
+c.toBlob(function(b){var d=document.getElementById('d');d.href=URL.createObjectURL(b);document.getElementById('i').src=d.href;document.getElementById('m').textContent='اضغط «تحميل الأيقونة» وهتتحفظ باسم icon-512.png'})}
+(document.fonts&&document.fonts.load?document.fonts.load('700 36px Cairo','حذيفة').catch(function(){}):Promise.resolve()).then(draw);
+</script></body></html>
