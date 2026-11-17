@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#1f6f50">
  <link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
+button,.btn{background:var(--pri);color:#fff;border:none;border-radius:14px;padding:12px 18px;font-weight:700;cursor:pointer;transition:background .25s ease,transform .2s ease,box-shadow .25s ease}<style>
 :root{--bg:#F7F4EC;--card:#FFFFFF;--txt:#22302A;--sub:#6E7B73;--pri:#124032;--pri2:#E9F1EC;--accent:#C9A227;--bad:#A94438;--bad2:#F7E7E3;--warn:#B98A2A;--line:#E4DFD2;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#101a15;--card:#18261f;--txt:#e8efe9;--sub:#94a79b;--pri:#3fae82;--pri2:#1f3a2d;--bad:#ef7b6f;--bad2:#3a1f1c;--warn:#e0a84a;--line:#2a3b32}}
 :root[data-theme="dark"]{color-scheme:dark;--bg:#101a15;--card:#18261f;--txt:#e8efe9;--sub:#94a79b;--pri:#3fae82;--pri2:#1f3a2d;--bad:#ef7b6f;--bad2:#3a1f1c;--warn:#e0a84a;--line:#2a3b32}
@@ -42,7 +42,7 @@ section[hidden]{display:none}
 #toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:8px 14px;border-radius:10px;font-size:14px;z-index:9}
 #toast[hidden]{display:none}
 .lg{position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;flex-direction:column;justify-content:center;padding:24px;max-width:480px;margin:auto}.lg[hidden]{display:none}.lg h1{color:var(--pri);font-size:22px;text-align:center}
-</style>
+.card,.stat,.hero{opacity:0;transform:translateY(18px);animation:softIn .8s ease forwards}.card:nth-child(2){animation-delay:.08s}.card:nth-child(3){animation-delay:.16s}.card:nth-child(4){animation-delay:.24s}@keyframes softIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}button,.btn{transition:background .25s ease,transform .2s ease,box-shadow .25s ease}button:hover,.btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(18,64,50,.15)}</style>
 </head>
 <body>
 <header class="row"><span>🕌 مركز حذيفة بن اليمان<small>تحت إشراف الشيخ فرج</small></span><button class="g" id="lo">خروج</button></header>
