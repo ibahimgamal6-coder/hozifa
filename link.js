@@ -7,7 +7,7 @@
   var busy = {};
 
   // التحكم في جميع التبويبات
-  var tabs = ['home', 'att', 'rec', 'stu', 'exm', 'reg'];
+  var tabs = ['home', 'att', 'rec', 'stu', 'exm', 'reg', 'fee'];
 
   function syncTabs() {
     var active = location.hash.replace('#', '');
