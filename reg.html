@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>التسجيل - مركز حذيفة بن اليمان</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -10%,#0f3d2e,#06140f 62%) fixed;color:#f3efe2;font-family:Cairo,system-ui,Tahoma,sans-serif}
+header{background:rgba(6,20,15,.7);color:#f6e3a1;padding:16px;font-family:Amiri,serif;font-size:22px;border-bottom:1px solid rgba(230,193,90,.2)}header small{display:block;color:#a9b9b0;font-family:Cairo,sans-serif;font-size:13px}
+main{max-width:560px;margin:auto;padding:14px}.card{background:linear-gradient(160deg,rgba(52,214,160,.1),rgba(10,30,22,.9));border:1px solid rgba(230,193,90,.2);border-radius:18px;padding:16px;margin-bottom:12px}
+h3{font-family:Amiri,serif;color:#f6e3a1;margin:0 0 6px;font-size:20px}label{display:block;margin:10px 0 4px;font-size:14px}p{color:#a9b9b0;line-height:1.8;margin:4px 0}
+input{width:100%;padding:11px;border:1px solid rgba(230,193,90,.25);border-radius:10px;background:rgba(255,255,255,.06);color:#f3efe2;font:inherit;font-size:16px}input:focus{outline:0;border-color:#e6c15a;box-shadow:0 0 0 3px rgba(230,193,90,.2)}
+button,.bt{display:block;text-align:center;text-decoration:none;margin-top:16px;width:100%;border:0;border-radius:12px;padding:13px;background:linear-gradient(120deg,#e6c15a,#f6e3a1);color:#1a1405;font:inherit;font-weight:700;font-size:17px}button:disabled{opacity:.6}#e{color:#ff8f80;margin-top:10px;font-size:14px}.hp{position:absolute;left:-9999px}</style></head>
+<body><header>🕌 مركز حذيفة بن اليمان<small>تسجيل طالب جديد وإنشاء حساب ولي الأمر</small></header>
+<main><div class="card" id="f"><h3>بيانات الطالب</h3><label>اسم الطالب (ثلاثي) *</label><input id="n" autocomplete="off"><label>سن الطالب</label><input id="ag" type="tel" inputmode="numeric"><label>كم جزء يحفظ الآن؟ (اختياري)</label><input id="m" autocomplete="off">
+<h3 style="margin-top:18px">حسابك كولي أمر</h3><p>هتتابع بيه ابنك داخل التطبيق: الحضور والتقدير والحفظ والمصاريف.</p><label>اسم ولي الأمر *</label><input id="pn" autocomplete="off"><label>رقم واتساب ولي الأمر * (هو اسم المستخدم)</label><input id="ph" type="tel" inputmode="numeric" placeholder="01XXXXXXXXX">
+<label>كلمة المرور * (6 حروف أو أرقام على الأقل)</label><input id="pw" type="password" autocomplete="new-password"><label>أعد كتابة كلمة المرور *</label><input id="pw2" type="password" autocomplete="new-password">
+<input class="hp" id="hp" tabindex="-1" autocomplete="off"><button id="s">إرسال الطلب وإنشاء الحساب</button><div id="e"></div></div>
+<div class="card" id="ok" hidden><h3>✅ تم استلام طلبك وإنشاء حسابك</h3><p>اسم المستخدم: <b id="un" style="color:#f6e3a1"></b></p><p>سيراجع المركز الطلب ويتواصل معك على واتساب. بعد الاعتماد تدخل بنفس الحساب وتشوف بيانات ابنك.</p><a class="bt" href="./">فتح التطبيق</a><button id="again" style="background:none;border:1px solid rgba(230,193,90,.4);color:#f6e3a1">تسجيل طالب آخر</button></div></main>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({apiKey:"AIzaSyCSKolz-EyLB_stw51gwqhjP6iQizbfjWQ",authDomain:"hozifa-2b8ab.firebaseapp.com",projectId:"hozifa-2b8ab",storageBucket:"hozifa-2b8ab.firebasestorage.app",messagingSenderId:"1015605148858",appId:"1:1015605148858:web:d93f27bcd8d9291a449683"});
+var db=firebase.firestore(),au=firebase.auth(),$=function(i){return document.getElementById(i)};
+function dg(t){return t.replace(/[٠-٩]/g,function(x){return x.charCodeAt(0)-1632}).replace(/\D/g,'')}
+function er(m){$('e').textContent=m;$('s').disabled=false}
+$('s').onclick=function(){var n=$('n').value.trim(),pn=$('pn').value.trim(),ph=dg($('ph').value),pw=$('pw').value;$('e').textContent='';
+ if($('hp').value)return;
+ if(n.length<2||pn.length<2)return er('اكتب اسم الطالب واسم ولي الأمر');
+ if(!/^01[0125]\d{8}$/.test(ph))return er('اكتب رقم واتساب مصري صحيح (11 رقم)');
+ if(pw.length<6)return er('كلمة المرور لازم تكون 6 حروف أو أرقام على الأقل');
+ if(pw!==$('pw2').value)return er('كلمتا المرور غير متطابقتين');
+ $('s').disabled=true;var em=ph+'@hozifa.local',a=dg($('ag').value),m=$('m').value.trim();
+ au.createUserWithEmailAndPassword(em,pw).catch(function(x){if(x.code==='auth/email-already-in-use')return au.signInWithEmailAndPassword(em,pw);throw x})
+ .then(function(){var d={n:n.slice(0,79),pn:pn.slice(0,79),ph:ph,uid:au.currentUser.uid,ts:firebase.firestore.FieldValue.serverTimestamp()};if(a)d.ag=a.slice(0,3);if(m)d.m=m.slice(0,150);return db.collection('reg').add(d)})
+ .then(function(){$('un').textContent=ph;$('f').hidden=true;$('ok').hidden=false},function(x){er(x.code==='auth/wrong-password'||x.code==='auth/invalid-credential'?'الرقم ده مسجل قبل كده بكلمة مرور مختلفة، اكتب كلمة المرور الصحيحة أو كلّم المركز':x.code==='auth/weak-password'?'كلمة المرور ضعيفة':'تعذّر الإرسال، تأكد من الإنترنت وحاول تاني')})};
+$('again').onclick=function(){['n','ag','m'].forEach(function(i){$(i).value=''});$('s').disabled=false;$('ok').hidden=true;$('f').hidden=false};
+</script></body></html>
