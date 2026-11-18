@@ -215,4 +215,25 @@
   render();
   setSection();
 })();
+(function () {
+  function syncRequestsTab() {
+    var active = location.hash === '#reg';
+    var section = document.getElementById('v-reg');
+    var nav = document.getElementById('n-reg');
+
+    if (section) section.hidden = !active;
+
+    if (active) {
+      document.querySelectorAll('nav a').forEach(function (a) {
+        a.classList.remove('on');
+      });
+      if (nav) nav.classList.add('on');
+    } else if (nav) {
+      nav.classList.remove('on');
+    }
+  }
+
+  window.addEventListener('hashchange', syncRequestsTab);
+  syncRequestsTab();
+})();
  
