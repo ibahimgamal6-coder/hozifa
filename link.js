@@ -28,8 +28,11 @@
     });
   }
 
-  window.addEventListener('hashchange', syncTabs);
-  syncTabs();
+  document.addEventListener('click', function(e) {
+  var a = e.target.closest('#n-fee');
+  if (a) location.hash = 'fee';
+});
+window.addEventListener('hashchange', syncTabs);
 
   if (!host) return;
 
