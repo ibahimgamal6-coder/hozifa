@@ -29,4 +29,4 @@ $('s').onclick=function(){var n=$('n').value.trim(),pn=$('pn').value.trim(),ph=d
  .then(function(){var d={n:n.slice(0,79),pn:pn.slice(0,79),ph:ph,uid:au.currentUser.uid,ts:firebase.firestore.FieldValue.serverTimestamp()};if(a)d.ag=a.slice(0,3);if(m)d.m=m.slice(0,150);return db.collection('reg').add(d)})
  .then(function(){$('un').textContent=ph;$('f').hidden=true;$('ok').hidden=false},function(x){er(x.code==='auth/wrong-password'||x.code==='auth/invalid-credential'?'الرقم ده مسجل قبل كده بكلمة مرور مختلفة، اكتب كلمة المرور الصحيحة أو كلّم المركز':x.code==='auth/weak-password'?'كلمة المرور ضعيفة':'تعذّر الإرسال، تأكد من الإنترنت وحاول تاني')})};
 $('again').onclick=function(){['n','ag','m'].forEach(function(i){$(i).value=''});$('s').disabled=false;$('ok').hidden=true;$('f').hidden=false};
-</script></body></html>
+</script></body></html> 
