@@ -181,8 +181,7 @@ $('allP').onclick=function(){var d=$('day').value;D.st.forEach(function(s){if(!D
 $('day').onchange=rA;$('rday').onchange=rR;$('rmo').onchange=rS;
 $('day').value=$('rday').value=ymd(new Date());$('rmo').value=ymd(new Date()).slice(0,7);
 $('sl').innerHTML=lvo();$('ss').innerHTML=suo(78);
-function show(){var n=location.hash.slice(1),T=['home','att','rec','stu','exm'],t=T.indexOf(n)>-1?n:'home';T.forEach(function(x){$('v-'+x).hidden=x!==t;$('n-'+x).className=x===t?'on':''})}
-
+function show(){var n=location.hash.slice(1),T=['home','att','rec','stu','exm','reg'],t=T.indexOf(n)>-1?n:'home';T.forEach(function(x){$('v-'+x).hidden=x!==t;$('n-'+x).className=x===t?'on':''})}
 function rX(){var t=ymd(new Date()),u=D.ex.filter(function(e){return e.d>=t}).sort(function(a,b){return a.d<b.d?-1:1}).slice(0,4);
  $('hm').innerHTML+='<div class="card"><h2>📅 الاختبارات القادمة</h2>'+(u.length?u.map(function(e){return'<div style="padding:4px 0"><b>'+esc(e.t||'اختبار شهري')+'</b><div class="sub">'+fd(e.d)+' · '+esc(e.l||'كل المستويات')+'</div></div>'}).join(''):'<div class="sub">لا توجد اختبارات محددة</div>')+'</div>';rE()}
 function rE(){var t=ymd(new Date());$('exl').innerHTML=D.ex.slice().sort(function(a,b){return a.d<b.d?1:-1}).map(function(e){return'<div class="card"'+(e.d<t?' style="opacity:.6"':'')+'><div class="row"><div><b>'+esc(e.t||'اختبار شهري')+'</b><div class="sub">'+fd(e.d)+' · '+esc(e.l||'كل المستويات')+'</div></div><button class="r" data-a="xd" data-i="'+e.id+'">حذف</button></div></div>'}).join('')||'<div class="empty">لا توجد اختبارات</div>'}
