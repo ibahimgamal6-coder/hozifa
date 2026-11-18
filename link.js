@@ -3,13 +3,40 @@
   'use strict';
 
   var host = document.getElementById('rql');
-  if (!host) return;
-
   var requests = [];
   var busy = {};
 
-  function escText(v) {
-    return typeof esc === 'function' ? esc(v) : String(v || '');
+  // التحكم في جميع التبويبات
+  var tabs = ['home', 'att', 'rec', 'stu', 'exm', 'reg'];
+
+  function syncTabs() {
+    var active = location.hash.replace('#', '');
+    if (tabs.indexOf(active) === -1) active = 'home';
+
+    tabs.forEach(function (name) {
+      var section = document.getElementById('v-' + name);
+      var nav = document.getElementById('n-' + name);
+
+      if (section) {
+        section.hidden = name !== active;
+        section.style.display = name === active ? '' : 'none';
+      }
+
+      if (nav) {
+        nav.classList.toggle('on', name === active);
+      }
+    });
+  }
+
+  window.addEventListener('hashchange', syncTabs);
+  syncTabs();
+
+  if (!host) return;
+
+  function safe(v) {
+    return typeof esc === 'function'
+      ? esc(v)
+      : String(v == null ? '' : v);
   }
 
   function notify(msg) {
@@ -21,6 +48,7 @@
     return !r.status || r.status === 'pending';
   }
 
+  // عرض الطلبات
   function render() {
     var waiting = requests.filter(pending);
     var history = requests.filter(function (r) {
@@ -28,55 +56,53 @@
     });
 
     host.innerHTML =
-      '<div class="row"><b>الطلبات الجديدة: ' + waiting.length +
+      '<div class="row"><b>الطلبات الجديدة: ' +
+      waiting.length +
       '</b><button class="g" id="regRefresh">تحديث</button></div>' +
 
-      (waiting.length ? waiting.map(function (r) {
-        return '<div class="card" style="margin-top:10px">' +
-          '<b>' + escText(r.n) + '</b>' +
-          '<div class="sub">ولي الأمر: ' + escText(r.pn) +
-          '</div><div class="sub">الهاتف: ' + escText(r.ph) +
-          '</div>' +
-          (r.ag ? '<div class="sub">العمر: ' + escText(r.ag) + '</div>' : '') +
-          (r.m ? '<div class="sub">الحفظ السابق: ' + escText(r.m) + '</div>' : '') +
+      (waiting.length
+        ? waiting.map(function (r) {
+            return '<div class="card" style="margin-top:10px">' +
+              '<b>' + safe(r.n) + '</b>' +
+              '<div class="sub">ولي الأمر: ' + safe(r.pn) + '</div>' +
+              '<div class="sub">الهاتف: ' + safe(r.ph) + '</div>' +
+              (r.ag
+                ? '<div class="sub">العمر: ' + safe(r.ag) + '</div>'
+                : '') +
+              (r.m
+                ? '<div class="sub">الحفظ السابق: ' + safe(r.m) + '</div>'
+                : '') +
 
-          '<label>المستوى</label>' +
-          '<select id="regLevel_' + escText(r.id) + '">' +
-          LV.map(function (v) {
-            return '<option>' + escText(v) + '</option>';
+              '<label>المستوى</label>' +
+              '<select id="regLevel_' + safe(r.id) + '">' +
+              LV.map(function (v) {
+                return '<option>' + safe(v) + '</option>';
+              }).join('') +
+              '</select>' +
+
+              '<div class="row">' +
+              '<button data-reg-action="accept" data-reg-id="' +
+              safe(r.id) + '">اعتماد الطلب</button>' +
+              '<button class="r" data-reg-action="reject" data-reg-id="' +
+              safe(r.id) + '">رفض</button>' +
+              '</div></div>';
+          }).join('')
+        : '<div class="empty">لا توجد طلبات جديدة حالياً</div>') +
+
+      (history.length
+        ? '<div class="card"><h2>سجل الطلبات السابقة</h2>' +
+          history.map(function (r) {
+            return '<div class="row" style="padding:8px 0;border-top:1px solid var(--line)">' +
+              '<span>' + safe(r.n) + '</span>' +
+              '<b>' +
+              (r.status === 'accepted' ? 'تم القبول' : 'مرفوض') +
+              '</b></div>';
           }).join('') +
-          '</select>' +
-
-          '<div class="row">' +
-          '<button data-reg-action="accept" data-reg-id="' + escText(r.id) + '">اعتماد الطلب</button>' +
-          '<button class="r" data-reg-action="reject" data-reg-id="' + escText(r.id) + '">رفض</button>' +
-          '</div></div>';
-      }).join('') : '<div class="empty">لا توجد طلبات جديدة حالياً</div>') +
-
-      (history.length ?
-        '<div class="card"><h2>سجل الطلبات السابقة</h2>' +
-        history.map(function (r) {
-          return '<div class="row" style="padding:8px 0;border-top:1px solid var(--line)">' +
-            '<span>' + escText(r.n) + '</span>' +
-            '<b>' + (r.status === 'accepted' ? 'تم القبول' : 'مرفوض') + '</b>' +
-            '</div>';
-        }).join('') + '</div>' : '');
+          '</div>'
+        : '');
   }
 
-  function setSection() {
-    if (location.hash !== '#reg') return;
-
-    document.querySelectorAll('main section').forEach(function (s) {
-      s.hidden = s.id !== 'v-reg';
-    });
-
-    document.querySelectorAll('nav a').forEach(function (a) {
-      a.className = a.id === 'n-reg' ? 'on' : '';
-    });
-  }
-
-  window.addEventListener('hashchange', setSection);
-
+  // أزرار قبول ورفض الطلبات
   document.addEventListener('click', function (e) {
     var b = e.target.closest('[data-reg-action],#regRefresh');
     if (!b) return;
@@ -88,6 +114,7 @@
 
     var id = b.dataset.regId;
     var action = b.dataset.regAction;
+
     var r = requests.filter(function (x) {
       return x.id === id;
     })[0];
@@ -95,21 +122,20 @@
     if (!r || !pending(r) || busy[id]) return;
 
     var user = firebase.auth().currentUser;
+
     if (!user) {
       notify('سجّل الدخول أولاً');
       return;
     }
 
     var regRef = fs.collection('reg').doc(id);
-    busy[id] = true;
-    b.disabled = true;
 
+    // رفض الطلب
     if (action === 'reject') {
-      if (!confirm('هل تريد رفض طلب ' + r.n + '؟')) {
-        busy[id] = false;
-        b.disabled = false;
-        return;
-      }
+      if (!confirm('هل تريد رفض طلب ' + r.n + '؟')) return;
+
+      busy[id] = true;
+      b.disabled = true;
 
       regRef.update({
         status: 'rejected',
@@ -127,24 +153,19 @@
       return;
     }
 
+    // قبول الطلب
     if (action === 'accept') {
-      var level = document.getElementById('regLevel_' + id);
-      var studentRef = fs.collection('st').doc();
-      var sid = studentRef.id;
-      var parentRef = fs.collection('parents').doc(r.uid);
-
       if (!r.uid) {
-        busy[id] = false;
-        b.disabled = false;
         notify('الطلب لا يحتوي على معرّف حساب ولي الأمر');
         return;
       }
 
-      if (!confirm('اعتماد الطالب ' + r.n + ' وإنشاء سجله؟')) {
-        busy[id] = false;
-        b.disabled = false;
-        return;
-      }
+      if (!confirm('اعتماد الطالب ' + r.n + ' وإنشاء سجله؟')) return;
+
+      var level = document.getElementById('regLevel_' + id);
+      var studentRef = fs.collection('st').doc();
+      var sid = studentRef.id;
+      var parentRef = fs.collection('parents').doc(r.uid);
 
       var student = {
         id: sid,
@@ -178,6 +199,9 @@
         reviewedBy: user.uid
       });
 
+      busy[id] = true;
+      b.disabled = true;
+
       batch.commit().then(function () {
         notify('تم اعتماد الطالب وربط حساب ولي الأمر بنجاح');
       }).catch(function (err) {
@@ -189,12 +213,16 @@
     }
   });
 
+  // تحميل الطلبات من Firebase
   firebase.auth().onAuthStateChanged(function (user) {
     if (!user) return;
 
     fs.collection('reg').onSnapshot(function (snapshot) {
       requests = snapshot.docs.map(function (doc) {
-        return Object.assign({ id: doc.id }, doc.data());
+        return Object.assign(
+          { id: doc.id },
+          doc.data()
+        );
       });
 
       requests.sort(function (a, b) {
@@ -204,57 +232,15 @@
       });
 
       render();
-      setSection();
+      syncTabs();
 
     }, function (err) {
       console.error(err);
-      host.innerHTML = '<div class="empty">تعذّر تحميل الطلبات. تحقق من صلاحيات Firebase.</div>';
+      host.innerHTML =
+        '<div class="empty">تعذّر تحميل الطلبات. تحقق من صلاحيات Firebase.</div>';
     });
   });
 
   render();
-  setSection();
 })();
-(function () {
-  function syncRequestsTab() {
-    var active = location.hash === '#reg';
-    var section = document.getElementById('v-reg');
-    var nav = document.getElementById('n-reg');
-
-    if (section) section.hidden = !active;
-
-    if (active) {
-      document.querySelectorAll('nav a').forEach(function (a) {
-        a.classList.remove('on');
-      });
-      if (nav) nav.classList.add('on');
-    } else if (nav) {
-      nav.classList.remove('on');
-    }
-  }
-
-  window.addEventListener('hashchange', syncRequestsTab);
-  (function () {
-  function syncRequestsTab() {
-    var active = location.hash === '#reg';
-    var section = document.getElementById('v-reg');
-    var nav = document.getElementById('n-reg');
-
-    if (section) {
-      section.hidden = !active;
-      section.style.display = active ? 'block' : 'none';
-    }
-
-    if (active) {
-      document.querySelectorAll('nav a').forEach(function (a) {
-        a.classList.remove('on');
-      });
-      if (nav) nav.classList.add('on');
-    } else if (nav) {
-      nav.classList.remove('on');
-    }
-  }
-
-  window.addEventListener('hashchange', syncRequestsTab);
-  syncRequestsTab();
-})();
+                                     
