@@ -30,8 +30,11 @@
 
   document.addEventListener('click', function(e) {
   var a = e.target.closest('#n-fee');
-  if (a) location.hash = 'fee';
-});
+  if (!a) return;
+  e.preventDefault();
+  location.hash = '#fee';
+  syncTabs();
+}, true);
 window.addEventListener('hashchange', syncTabs);
 
   if (!host) return;
