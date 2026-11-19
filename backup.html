@@ -1,0 +1,19 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>نسخة احتياطية - مركز حذيفة</title>
+<style>*{box-sizing:border-box}body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% -10%,#0f3d2e,#06140f 62%) fixed;color:#f3efe2;font-family:Cairo,system-ui,Tahoma,sans-serif;padding:16px;overflow-x:hidden}
+.c{width:100%;max-width:420px;background:rgba(10,30,22,.9);border:1px solid rgba(230,193,90,.2);border-radius:18px;padding:20px;text-align:center}
+h1{font-size:20px;color:#f6e3a1;margin:0 0 8px}p{color:#a9b9b0;line-height:1.8;font-size:14px}
+button{width:100%;margin-top:14px;border:0;border-radius:12px;padding:13px;background:linear-gradient(120deg,#e6c15a,#f6e3a1);color:#1a1405;font:inherit;font-weight:700;font-size:17px}button:disabled{opacity:.6}#s{min-height:24px;margin-top:12px;font-size:14px;color:#f6e3a1}</style></head>
+<body><div class="c"><h1>🕌 نسخة احتياطية</h1><p>بينزّل كل بيانات المركز في ملف واحد على جهازك.</p><button id="b" disabled>تحميل نسخة احتياطية</button><div id="s">جاري التحقق...</div></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({apiKey:"AIzaSyCSKolz-EyLB_stw51gwqhjP6iQizbfjWQ",authDomain:"hozifa-2b8ab.firebaseapp.com",projectId:"hozifa-2b8ab",storageBucket:"hozifa-2b8ab.firebasestorage.app",messagingSenderId:"1015605148858",appId:"1:1015605148858:web:d93f27bcd8d9291a449683"});
+var db=firebase.firestore(),au=firebase.auth(),$=function(i){return document.getElementById(i)};
+var STF=['sheikh','ibrahim','mona','hagar','safaa'],COLS=['parents','st','att','gr','pay','cl','ex','ann','reg'];
+function cv(v){if(v&&typeof v.toDate==='function')return v.toDate().toISOString();if(Array.isArray(v))return v.map(cv);if(v&&typeof v==='object'){var o={};for(var k in v)o[k]=cv(v[k]);return o}return v}
+au.onAuthStateChanged(function(u){if(!u||STF.indexOf((u.email||'').split('@')[0])<0){location.replace('./');return}
+ $('s').textContent='مسجّل دخول: '+u.email.split('@')[0];$('b').disabled=false});
+$('b').onclick=function(){var b=this,out={},n=0;b.disabled=true;out._at=new Date().toISOString();
+ COLS.reduce(function(p,c){return p.then(function(){$('s').textContent='جاري تحميل: '+c;return db.collection(c).get().then(function(q){out[c]={};q.forEach(function(d){out[c][d.id]=cv(d.data());n++})})})},Promise.resolve())
+ .then(function(){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(out,null,1)],{type:'application/json'}));a.download='hozifa-backup-'+out._at.slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();$('s').textContent='✅ تم تحميل '+n+' سجل';b.disabled=false},
+ function(e){$('s').textContent='❌ فشل: '+(e.code||e.message);b.disabled=false})};
+</script></body></html>
