@@ -1,9 +1,9 @@
-
 (function () {
   'use strict';
 
   var host = document.getElementById('rql');
   var requests = [];
+  var classes = [];
   var busy = {};
 
   // التحكم في جميع التبويبات
@@ -83,6 +83,16 @@ window.addEventListener('hashchange', syncTabs);
               '<select id="regLevel_' + safe(r.id) + '">' +
               LV.map(function (v) {
                 return '<option>' + safe(v) + '</option>';
+              }).join('') +
+              '</select>' +
+
+              '<label>الفصل</label>' +
+              '<select id="regClass_' + safe(r.id) + '">' +
+              '<option value="">اختر الفصل</option>' +
+              classes.map(function (c) {
+                return '<option value="' + safe(c.id) + '">' +
+                  safe(c.n || c.id) + (c.t ? ' — ' + safe(c.t) : '') +
+                  '</option>';
               }).join('') +
               '</select>' +
 
@@ -166,9 +176,15 @@ window.addEventListener('hashchange', syncTabs);
         return;
       }
 
+      var level = document.getElementById('regLevel_' + id);
+      var cls = document.getElementById('regClass_' + id);
+
+      if (cls && !cls.value && classes.length) {
+        if (!confirm('لم تختر فصلاً للطالب. هل تريد الاعتماد بدون فصل؟')) return;
+      }
+
       if (!confirm('اعتماد الطالب ' + r.n + ' وإنشاء سجله؟')) return;
 
-      var level = document.getElementById('regLevel_' + id);
       var studentRef = fs.collection('st').doc();
       var sid = studentRef.id;
       var parentRef = fs.collection('parents').doc(r.uid);
@@ -182,7 +198,7 @@ window.addEventListener('hashchange', syncTabs);
         pn: r.pn || '',
         ph: r.ph || '',
         h: [],
-        c: '',
+        c: cls ? cls.value : '',
         mm: r.m || ''
       };
 
@@ -219,9 +235,18 @@ window.addEventListener('hashchange', syncTabs);
     }
   });
 
-  // تحميل الطلبات من Firebase
+  // تحميل الطلبات والفصول من Firebase
   firebase.auth().onAuthStateChanged(function (user) {
     if (!user) return;
+
+    fs.collection('cl').onSnapshot(function (snapshot) {
+      classes = snapshot.docs.map(function (doc) {
+        return Object.assign({ id: doc.id }, doc.data());
+      });
+      render();
+    }, function (err) {
+      console.error(err);
+    });
 
     fs.collection('reg').onSnapshot(function (snapshot) {
       requests = snapshot.docs.map(function (doc) {
