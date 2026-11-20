@@ -5,6 +5,8 @@
   var requests = [];
   var classes = [];
   var busy = {};
+  var shown = 0;
+  var KEEP_MS = 3 * 60 * 60 * 1000; // مدة ظهور المقبول: 3 ساعات
 
   // التحكم في جميع التبويبات
   var tabs = ['home', 'att', 'rec', 'stu', 'exm', 'reg', 'fee'];
@@ -28,14 +30,14 @@
     });
   }
 
-  document.addEventListener('click', function(e) {
-  var a = e.target.closest('#n-fee');
-  if (!a) return;
-  e.preventDefault();
-  location.hash = '#fee';
-  syncTabs();
-}, true);
-window.addEventListener('hashchange', syncTabs);
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('#n-fee');
+    if (!a) return;
+    e.preventDefault();
+    location.hash = '#fee';
+    syncTabs();
+  }, true);
+  window.addEventListener('hashchange', syncTabs);
 
   if (!host) return;
 
@@ -54,12 +56,19 @@ window.addEventListener('hashchange', syncTabs);
     return !r.status || r.status === 'pending';
   }
 
+  // المقبول فقط ولمدة 3 ساعات، والمرفوض لا يظهر
+  function recent(r) {
+    if (r.status !== 'accepted') return false;
+    var t = r.reviewedAt && r.reviewedAt.toMillis ? r.reviewedAt.toMillis() : 0;
+    if (!t) return !!r._pw;
+    return Date.now() - t < KEEP_MS;
+  }
+
   // عرض الطلبات
   function render() {
     var waiting = requests.filter(pending);
-    var history = requests.filter(function (r) {
-      return !pending(r);
-    });
+    var history = requests.filter(recent);
+    shown = history.length;
 
     host.innerHTML =
       '<div class="row"><b>الطلبات الجديدة: ' +
@@ -106,13 +115,11 @@ window.addEventListener('hashchange', syncTabs);
         : '<div class="empty">لا توجد طلبات جديدة حالياً</div>') +
 
       (history.length
-        ? '<div class="card"><h2>سجل الطلبات السابقة</h2>' +
+        ? '<div class="card"><h2>تم قبولهم مؤخراً</h2>' +
           history.map(function (r) {
             return '<div class="row" style="padding:8px 0;border-top:1px solid var(--line)">' +
               '<span>' + safe(r.n) + '</span>' +
-              '<b>' +
-              (r.status === 'accepted' ? 'تم القبول' : 'مرفوض') +
-              '</b></div>';
+              '<b>تم القبول</b></div>';
           }).join('') +
           '</div>'
         : '');
@@ -158,7 +165,7 @@ window.addEventListener('hashchange', syncTabs);
         reviewedAt: firebase.firestore.FieldValue.serverTimestamp(),
         reviewedBy: user.uid
       }).then(function () {
-        notify('تم رفض الطلب مع الاحتفاظ بسجله');
+        notify('تم رفض الطلب');
       }).catch(function (err) {
         console.error(err);
         notify('تعذّر رفض الطلب. راجع صلاحيات Firebase');
@@ -251,7 +258,7 @@ window.addEventListener('hashchange', syncTabs);
     fs.collection('reg').onSnapshot(function (snapshot) {
       requests = snapshot.docs.map(function (doc) {
         return Object.assign(
-          { id: doc.id },
+          { id: doc.id, _pw: doc.metadata.hasPendingWrites },
           doc.data()
         );
       });
@@ -271,6 +278,11 @@ window.addEventListener('hashchange', syncTabs);
         '<div class="empty">تعذّر تحميل الطلبات. تحقق من صلاحيات Firebase.</div>';
     });
   });
+
+  // كل دقيقة: لو انتهت مدة ظهور أحد المقبولين، يختفي من القايمة
+  setInterval(function () {
+    if (requests.filter(recent).length !== shown) render();
+  }, 60000);
 
   render();
 })();
